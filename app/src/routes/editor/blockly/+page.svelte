@@ -2,6 +2,7 @@
     import NavBar from "$lib/components/NavBar.svelte";
     import Workspace from "./workspace.svelte";
     import {persisted} from "$lib/localstorage";
+    import {botToken} from "$lib/userStore";
     import SettingsTab from "./SettingsTab.svelte";
     let settings = persisted('workspace')
     let sidebarOpen = true;
@@ -26,6 +27,22 @@
             files = [...files, file];
             activeFileIndex = files.length - 1;
         }
+    }
+    async function getBot(token:string) {
+      if (!token) return "bot name"
+        const response = await fetch(`https://discodes.xyz/api/v1/discord/bot`, {
+            method: "POST",
+            mode: "cors",
+            body: JSON.stringify({
+                token: token
+            })
+        });
+        if (!response.ok) {
+            botToken.set("")
+            return null
+        }
+        console.log("response",response)
+        return await response.json()
     }
   function closeFile(index) {
     files = files.filter((_, i) => i !== index);
@@ -135,13 +152,15 @@ async function replaceWorkspace() {
 
 <div class="h-full w-full flex flex-col">
 <div>
+  {#await getBot($botToken) then bot}
     <NavBar links={false}>
             <div class="flex flex-row gap-6 items-center">
             <button class="btn btn-square btn-neutral btn-sm" on:click={() => sidebarOpen = !sidebarOpen}><span class="material-symbols-outlined">menu</span></button>
-            <h2 class="text-3xl font-bold">{$settings.settings.botName}</h2>
+            <h2 class="text-3xl font-bold">{bot}</h2>
             <button class="btn btn-square btn-accent btn-sm"><span class="material-symbols-outlined">play_arrow</span></button>
         </div>
     </NavBar>
+    {/await}
 </div>
 
 <div class="flex flex-row">

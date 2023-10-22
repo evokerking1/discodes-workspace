@@ -30,6 +30,7 @@
 		"@supabase/supabase-js": "^2.32.0",
 		"blockly": "^10.1.2",
 		"discodes-utilities": "^1.0.3",
+		"jose": "^4.15.4",
 		"jszip": "^3.10.1",
 		"prettier": "^3.0.3",
 		"prismjs": "^1.29.0"

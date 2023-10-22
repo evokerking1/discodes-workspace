@@ -2,7 +2,7 @@
     import "../app.css";
     import { invalidate } from '$app/navigation';
     import { onMount } from 'svelte';
-    import { user } from "$lib/userStore";
+    import { user, settings } from "$lib/userStore";
     import { page } from '$app/stores';  
 
     import RoleCheck from "$lib/components/RoleCheck.svelte";
@@ -37,8 +37,8 @@
 	<title>Discodes</title>
 </svelte:head>
 
-
-
+{#if typeof window  !== 'undefined'}
+<div data-theme={$settings.theme}>
 {#if $page.url.pathname == allowedUrls[0] || $page.url.pathname == allowedUrls[1] || isDev}
     <slot />
 {:else}
@@ -47,4 +47,6 @@
             <slot/>
         </div>
     </RoleCheck>
+{/if}
+</div>
 {/if}
